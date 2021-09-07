@@ -21,9 +21,11 @@ public class EnemyMove : MonoBehaviour
     RectTransform hpBar;
     Image nowHpBar;
 
+    public GameObject bullet; // 총알
+
     public float height;
     public bool isDie;
-    bool isTracing;
+    bool isTracing; // 플레이어가 인식되어 있는가?
 
     // 플레이어 인식
     GameObject traceTarget;
@@ -71,6 +73,7 @@ public class EnemyMove : MonoBehaviour
     {
         Move();
         PlatformCheck();
+        AttackRange();
     }
 
     private void Update()
@@ -84,11 +87,11 @@ public class EnemyMove : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
 
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player") // 플레이어가 인식됐을때
         {
             traceTarget = other.gameObject;
 
-            StopCoroutine("ChangeMovement");
+            StopCoroutine("ChangeMovement"); 
            
         }
     }
@@ -96,7 +99,7 @@ public class EnemyMove : MonoBehaviour
     void OnTriggerStay2D(Collider2D other)
     {
 
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player") // 플레이어가 계속 있을때
         {
             isTracing = true;
             anim.SetBool("isMoving", true);
@@ -107,13 +110,14 @@ public class EnemyMove : MonoBehaviour
     void OnTriggerExit2D(Collider2D other)
     {
 
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player") // 플레이어가 인식 범위를 벗어났을때
         {
             isTracing = false;
             StartCoroutine("ChangeMovement");
         }
     }
 
+    // 플레이어 위치에 따라 플레이어를 따라가는 코루틴함수
     IEnumerator ChangeMovement()
     {
         nextMove = Random.Range(-1, 2);
@@ -132,36 +136,71 @@ public class EnemyMove : MonoBehaviour
         StartCoroutine("ChangeMovement");
     }
 
-    private void PlatformCheck()
+    private void PlatformCheck() // 지면 체크
     {
         // Platform Check
         Vector2 frontVec = new Vector2(rigid.position.x + nextMove * 0.5f, rigid.position.y);
 
-        Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0));
-        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Platform"));
+        Debug.DrawRay(frontVec, Vector3.down, new Color(0, 2, 0));
+        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 2, LayerMask.GetMask("Platform"));
 
         if (rayHit.collider == null)
         {
             check();
+            Debug.Log("지면이 없습니다");
         }
+    }
+
+    void AttackRange()
+    {
+        if (!isDie)
+        {
+            switch (enemyName)
+            {
+                case "Sword":
+                    break;
+                case "Gun":
+                    Debug.DrawRay(transform.position, new Vector3(-transform.localScale.x * 5, 0, 0), new Color(10, 0, 0));
+                    RaycastHit2D rayHit = Physics2D.Raycast(transform.position, new Vector3(-transform.localScale.x, 0,0)
+                    , 5, LayerMask.GetMask("Player"));
+                    if(rayHit.collider)
+                    {
+
+                        Debug.Log("플레이어 감지");
+                    }
+
+                    break;
+                case "Boom":
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
     void Move()
     {
         Vector3 moveVelocity = Vector3.zero;
         string dist = "";
-
-        if(!isDie)
+        if (!isDie)
         {
 
-            if (isTracing)
+            if (isTracing) // 플레이어가 인식된 상태면
             {
-                Vector3 playerPos = traceTarget.transform.position;
+                Vector3 playerPos = traceTarget.transform.position; // 플레이어의 위치를 받음
 
                 if (playerPos.x < transform.position.x)
+                {
+                    nextMove = -1;
                     dist = "Left";
+                }                   
                 else if (playerPos.x > transform.position.x)
+                {
+                    nextMove = 1;
                     dist = "Right";
+                }
+                    
             }
             else
             {

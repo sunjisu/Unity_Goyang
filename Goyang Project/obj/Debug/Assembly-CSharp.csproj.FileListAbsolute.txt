@@ -1,0 +1,2 @@
+D:\Desktop\깃허브 저장소\Unity_Goyang\Goyang Project\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+D:\Desktop\깃허브 저장소\Unity_Goyang\Goyang Project\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
