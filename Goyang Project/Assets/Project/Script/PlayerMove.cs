@@ -112,7 +112,7 @@ public class PlayerMove : MonoBehaviour
         }
         else if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(1, 1, 1);           
         }
 
 
@@ -205,10 +205,10 @@ public class PlayerMove : MonoBehaviour
             if (rigid.velocity.y < 0 && transform.position.y > collision.transform.position.y)
             {
                 OnAttack(collision.transform);
-            }
-            
-
+            }                
         }
+
+        
 
     }
 
@@ -244,6 +244,12 @@ public class PlayerMove : MonoBehaviour
         else if (collision.gameObject.tag == "Finish")
         {
             gameManager.NextStage();
+        }
+
+        if (collision.gameObject.tag == "Enemy Attack") // 플레이어 피격
+        {
+            OnDamaged(collision.transform.position);
+
         }
 
     }

@@ -23,16 +23,17 @@ public class EnemyMove : MonoBehaviour
 
     public GameObject bullet; // 총알
 
+    // 근거리 타격 위치
+    public BoxCollider2D meleeArea;
+
+
     public float height;
     public bool isDie;
     bool isTracing; // 플레이어가 인식되어 있는가?
+    bool isAttack;
 
     // 플레이어 인식
-    GameObject traceTarget;
-
-    // 플레이어 인식 콜라이더
-    public Transform pos;
-    public Vector2 boxSize;
+    GameObject traceTarget;    
 
     // Enemy state
     public string enemyName;
@@ -151,39 +152,101 @@ public class EnemyMove : MonoBehaviour
         }
     }
 
+    public float cooltime;
+    private float currenttime;
+
+
     void AttackRange()
     {
         if (!isDie)
         {
+            float targetRange = 0;
+
             switch (enemyName)
             {
                 case "Sword":
+                    targetRange = 1.8f;
                     break;
-                case "Gun":
-                    Debug.DrawRay(transform.position, new Vector3(-transform.localScale.x * 5, 0, 0), new Color(10, 0, 0));
-                    RaycastHit2D rayHit = Physics2D.Raycast(transform.position, new Vector3(-transform.localScale.x, 0,0)
-                    , 5, LayerMask.GetMask("Player"));
-                    if(rayHit.collider)
-                    {
-
-                        Debug.Log("플레이어 감지");
-                    }
-
+                case "Gun":                    
+                    targetRange = 5;    
                     break;
                 case "Boom":
                     break;
                 default:
                     break;
             }
+
+            Debug.DrawRay(transform.position, new Vector3(-transform.localScale.x * targetRange, 0, 0), new Color(10, 0, 0));
+
+            RaycastHit2D rayHit = Physics2D.Raycast(transform.position, new Vector3(-transform.localScale.x, 0, 0)
+                    , targetRange, LayerMask.GetMask("Player"));
+
+            if (rayHit.collider && !isAttack) // 충돌한게 있고 공격 실행중이 아니라면
+            {
+                StartCoroutine(AttackCoroutine()); // 공격실행
+                               
+            }
+
+            
+
         }
 
     }
 
-    void Move()
+    IEnumerator AttackCoroutine()
     {
+        isTracing = false;
+        isAttack = true;
+        anim.SetBool("Attack", true);
+
+        yield return new WaitForSeconds(0.2f);
+
+        switch (enemyName)
+        {
+            case "Sword":
+                yield return new WaitForSeconds(0.2f);
+
+                meleeArea.enabled = true;
+
+                yield return new WaitForSeconds(0.5f);
+
+                meleeArea.enabled = false;
+
+                yield return new WaitForSeconds(1f);
+                break;
+            case "Gun":
+                if(!isDie)
+                {
+                    GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
+                    Rigidbody2D rigidBullet = instantBullet.GetComponent<Rigidbody2D>();
+                    rigidBullet.velocity = transform.right * 5 * transform.localScale.x; // 발사 속도
+
+                    yield return new WaitForSeconds(2f);
+                    Destroy(instantBullet, 3f);
+                }
+                
+                break;
+            case "Boom":
+                break;
+            default:
+                break;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        isTracing = true;
+        isAttack = false;
+        anim.SetBool("Attack", false);
+
+
+    }
+    
+
+    void Move()
+        {
         Vector3 moveVelocity = Vector3.zero;
         string dist = "";
-        if (!isDie)
+        if (!isDie && !isAttack)
         {
 
             if (isTracing) // 플레이어가 인식된 상태면
