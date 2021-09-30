@@ -146,11 +146,11 @@ public class PlayerMove : MonoBehaviour
 
         if (Mathf.Abs(rigid.velocity.x) < 0.3)
         {
-            // anim.SetBool("Walking", false);
+             anim.SetBool("Walking", false);
         }
         else
         {
-            //anim.SetBool("Walking", true);
+            anim.SetBool("Walking", true);
         }
 
     }
@@ -158,7 +158,7 @@ public class PlayerMove : MonoBehaviour
     {
         float h = Input.GetAxisRaw("Horizontal");
 
-        rigid.velocity = new Vector2(h * 3, rigid.velocity.y);
+        rigid.velocity = new Vector2(h * 5, rigid.velocity.y);
 
 
 

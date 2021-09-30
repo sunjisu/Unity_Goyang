@@ -37,7 +37,9 @@ public class GameManager : MonoBehaviour
 
             PlayerReposition();
 
-            UIStage.text = "STAGE" + (stageIndex + 1);
+          //  UIStage.text = "STAGE" + (stageIndex + 1);
+
+
         }
         else // Game Clear
         {
@@ -90,7 +92,7 @@ public class GameManager : MonoBehaviour
 
     void PlayerReposition()
     {
-        player.transform.position = new Vector3(0, 0, 2);
+        player.transform.position = new Vector3(0, 0, 0);
         player.VelocityZero();
     }
 
