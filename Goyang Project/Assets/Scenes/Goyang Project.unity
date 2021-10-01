@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -151,12 +151,6 @@ Transform:
   m_Father: {fileID: 534659002}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &55657114 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7060936709472064242, guid: 13624236d570e094390a33869240d774,
-    type: 3}
-  m_PrefabInstance: {fileID: 674027777}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &97867856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,6 +1019,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13624236d570e094390a33869240d774, type: 3}
+--- !u!4 &674027778 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7626669244072353877, guid: 13624236d570e094390a33869240d774,
+    type: 3}
+  m_PrefabInstance: {fileID: 674027777}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &702721261
 GameObject:
   m_ObjectHideFlags: 0
@@ -1518,7 +1518,7 @@ Transform:
   m_LocalPosition: {x: -13.3, y: -2.6, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 55657114}
+  - {fileID: 674027778}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1532,7 +1532,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: fd0b27ae1c77e8248823d776dabcbc72, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9712b07673bb5e34892cce995031048a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
