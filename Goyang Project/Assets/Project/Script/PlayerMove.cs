@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    // 함수 호출
     public GameManager gameManager;
 
     // 플레이어 스테이터스
@@ -12,14 +13,19 @@ public class PlayerMove : MonoBehaviour
     public float jumpPower;
     private int attackMotion = 0;
 
+    // 땅 체크
     private bool isGround;
+
+    // NPC 등 체크
+    private Vector3 dirVec;
+    private GameObject scanObj;
 
     // 점프 체크
     public Transform jumpPos;
     public float checkRadius;
     public LayerMask islayer;
 
-
+    // 점프 최대 횟수
     private int jumpCnt = 2;
 
     // 타격 위치
@@ -87,7 +93,12 @@ public class PlayerMove : MonoBehaviour
             jumpCnt--;
         }
 
-
+        // 대화하기
+        if(Input.GetKeyDown(KeyCode.C) && scanObj != null)
+        {
+            gameManager.Action(scanObj);
+        }
+            
 
         // power off
         if (Input.GetButtonUp("Horizontal"))
@@ -109,10 +120,13 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetAxisRaw("Horizontal") < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
+
+            dirVec = Vector3.left;
         }
         else if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            transform.localScale = new Vector3(1, 1, 1);           
+            transform.localScale = new Vector3(1, 1, 1);
+            dirVec = Vector3.right;
         }
 
 
@@ -156,19 +170,25 @@ public class PlayerMove : MonoBehaviour
     }
     void FixedUpdate()
     {
-        float h = Input.GetAxisRaw("Horizontal");
+        float h = gameManager.isAction ? 0 : Input.GetAxisRaw("Horizontal");
 
-        rigid.velocity = new Vector2(h * 5, rigid.velocity.y);
-
-
-
-        if (rigid.velocity.x > maxSpeed)
+        if(h != 0)
         {
-            rigid.velocity = new Vector2(maxSpeed, rigid.velocity.y);
+            rigid.velocity = new Vector2(h * 5, rigid.velocity.y);
         }
-        else if (rigid.velocity.x < maxSpeed * (-1))
+
+
+        // NPC 체크
+        Debug.DrawRay(rigid.position, dirVec * 2f, new Color(0, 1, 0));
+        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, dirVec, 2f, LayerMask.GetMask("NPC"));
+       
+        if(rayHit.collider != null )
         {
-            rigid.velocity = new Vector2(maxSpeed * (-1), rigid.velocity.y);
+            scanObj = rayHit.collider.gameObject;
+        }
+        else
+        {
+            scanObj = null;
         }
 
 
@@ -253,7 +273,7 @@ public class PlayerMove : MonoBehaviour
         }
 
     }
-
+    
     void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Platform")

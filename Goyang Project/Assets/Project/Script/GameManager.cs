@@ -17,12 +17,38 @@ public class GameManager : MonoBehaviour
     public Image[] UIhealth;
     public Text UIPoint;
     public Text UIStage;
+
+    // 대화창
+    public GameObject talkPanel;
+    public Text talkText;
+    private GameObject scanObject;
+    public bool isAction;
+
+
     public GameObject RestartButton;
 
 
     private void Update()
     {
         UIPoint.text = (totalPoint + stagePoint).ToString();
+    }
+
+    // 대화창 액션
+    public void Action(GameObject scanObj)
+    {
+        if(isAction)
+        {
+            isAction = false;           
+        }
+        else
+        {
+            isAction = true;           
+            scanObject = scanObj;
+            talkText.text = "아아 이것의 이름은" + scanObj.name + "라구!";
+        }
+
+        talkPanel.SetActive(isAction);
+
     }
 
     public void NextStage()
